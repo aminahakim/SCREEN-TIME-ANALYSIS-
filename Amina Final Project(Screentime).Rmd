@@ -1,0 +1,65 @@
+---
+title: "FINAL PROJECT"
+author: "Amina Hakim"
+date: "2024-04-16"
+output: pdf_document
+---
+```{r}
+library(readxl)
+library(ggplot2)
+library(tidyverse)
+```
+
+```{r}
+#Import data
+data <- read_excel("/Users/aminahakim/Desktop/AMINA DATA 211/AMINA SCREEN TIME PROJECT DATA.xlsx")
+```
+
+```{r}
+# Calculate average screen time for each day
+data_summary <- data %>%
+  mutate(
+    screen_time_hours = as.numeric(gsub("H.*", "", `AVERAGE SCREEN TIME`)),
+    screen_time_minutes = as.numeric(gsub(".*H|M", "", `AVERAGE SCREEN TIME`)),
+    time_spent_hours = as.numeric(gsub("H.*", "", `TIME SPENT`)),
+    time_spent_minutes = as.numeric(gsub(".*H|M", "", `TIME SPENT`))
+  ) %>%
+  group_by(`DAYS`) %>%
+  summarise(
+    avg_screen_time_hours = mean(screen_time_hours),
+    avg_screen_time_minutes = mean(screen_time_minutes),
+    avg_time_spent_hours = mean(time_spent_hours),
+    avg_time_spent_minutes = mean(time_spent_minutes)
+  )
+
+# Bar chart of average screen time
+ggplot(data_summary, aes(x = `DAYS`, y = avg_screen_time_hours)) +geom_bar(stat = "identity", fill = "steelblue") +labs(title = "Average Screen Time by Day", x = "Day", y = "Average Screen Time (hours)")
+
+# Group data into weekdays and weekends
+weekdays <- data_summary %>%
+  filter(`DAYS` %in% c("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"))
+weekends <- data_summary %>%
+  filter(`DAYS` %in% c("SATURDAY", "SUNDAY"))
+
+# Perform t-test
+t_test_result <- t.test(weekdays$avg_screen_time_hours, weekends$avg_screen_time_hours)
+cat("T-test results:\n")
+print(t_test_result)
+
+# Calculate time spent on each app for each day
+app_summary <- data %>%
+  mutate(
+    time_spent_hours = as.numeric(gsub("H.*", "", `TIME SPENT`)),
+    time_spent_minutes = as.numeric(gsub(".*H|M", "", `TIME SPENT`))
+  ) %>%
+  group_by(`MOST FREQUENTLY USED APP`, `DAYS`, .groups = "drop_last") %>%
+  summarise(
+    avg_time_spent_hours = mean(time_spent_hours),
+    avg_time_spent_minutes = mean(time_spent_minutes)
+  )
+app_summary <- app_summary %>%
+  mutate(DAYS = factor(`DAYS`, levels = c("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")))
+# Bar chart of frequently used apps with time spent
+ggplot(app_summary, aes(x = `MOST FREQUENTLY USED APP`,y=avg_time_spent_hours, fill =DAYS)) +geom_bar(stat = "identity", position = "dodge") +labs(title = "Time Spent on Frequently Used Apps", x = "App", y = "Time Spent (hours)") +scale_fill_brewer(palette = "Blues")
+```
+
