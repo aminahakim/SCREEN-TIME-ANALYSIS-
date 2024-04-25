@@ -3,7 +3,7 @@ This R script analyzes screen time data and provides insights inot average scree
 #Features 
 Imports data from excel. 
 Calculates average screen time for each day.
-Generates a bar chart of avaerage screen time by day. 
+Generates a bar chart of average screen time by day. 
 Groups data into weekdays and weekends.
 Performs a t-test to compare screen time between weekdays and weekends. 
 Calculates time spent on each app for each day. 
