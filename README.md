@@ -1,5 +1,5 @@
 #Screen Time Analysis
-This R script analyzes screen time data and provides insights inot average screen time by day and frequently used apps.
+This R script analyzes screen time data and provides insights into average screen time by day and frequently used apps.
 #Features 
 Imports data from excel. 
 Calculates average screen time for each day.
