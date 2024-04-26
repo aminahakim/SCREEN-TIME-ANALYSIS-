@@ -1,5 +1,5 @@
 ---
-title: "DATA_211 FINAL PROJECT"
+title: "DATA_211 SCREEN TIME ANALYSIS PROJECT"
 author: "Amina Hakim"
 date: "2024-04-16"
 output: pdf_document
